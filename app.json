@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "El Shampán",
+    "slug": "el-shampan",
+    "version": "2.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#090909"
+    },
+    "android": {
+      "package": "com.elshampan.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
