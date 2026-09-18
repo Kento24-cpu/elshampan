@@ -1,6 +1,6 @@
-// Capa preparada para el backend.
+const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://10.0.2.2:3000/api";
 
-export const API_URL = "http://TU-IP:3000/api";
+export { API_URL };
 
 export async function apiFetch(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
@@ -10,8 +10,11 @@ export async function apiFetch(path, options = {}) {
       ...(options.headers || {})
     }
   });
+
   const data = await response.json().catch(() => ({}));
+
   if (!response.ok) throw new Error(data.message || "Error del servidor");
+
   return data;
 }
 
