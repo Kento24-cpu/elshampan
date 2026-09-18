@@ -1,12 +1,51 @@
-import React from "react";
-import { Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { productApi } from "../services/api";
 import { useApp } from "../context/AppContext";
 
-const money = v => `C$ ${v.toLocaleString("es-NI")}`;
+const money = v => `C$ ${Number(v).toLocaleString("es-NI")}`;
 
 export default function ProductScreen({ route, navigation }) {
-  const { product } = route.params;
+  const { product: initialProduct, productId } = route.params;
+  const [product, setProduct] = useState(initialProduct ?? null);
+  const [error, setError] = useState(null);
   const { addToCart, favorites, toggleFavorite } = useApp();
+
+  const id = productId ?? initialProduct?.id;
+
+  const load = useCallback(async () => {
+    if (!id) return;
+
+    setError(null);
+
+    try {
+      setProduct(await productApi.byId(id));
+    } catch (loadError) {
+      setError(loadError.message);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  if (!product) {
+    return (
+      <View className="flex-1 items-center justify-center bg-black px-8">
+        {error ? (
+          <>
+            <Text className="text-5xl">⚠</Text>
+            <Text className="mt-4 text-center text-xl font-black text-white">No pudimos cargar el producto</Text>
+            <Text className="mt-2 text-center text-zinc-500">{error}</Text>
+            <Pressable onPress={load} className="mt-6 rounded-2xl bg-gold-400 px-8 py-4"><Text className="font-black text-black">REINTENTAR</Text></Pressable>
+          </>
+        ) : (
+          <ActivityIndicator size="large" color="#E9B949" />
+        )}
+      </View>
+    );
+  }
+
   const favorite = favorites.includes(product.id);
 
   const add = () => {
@@ -36,7 +75,7 @@ export default function ProductScreen({ route, navigation }) {
       </View>
     </ScrollView>
     <View className="absolute bottom-0 left-0 right-0 border-t border-zinc-800 bg-black/95 p-4">
-      <Pressable onPress={add} className="rounded-2xl bg-gold-400 py-4 items-center"><Text className="font-black text-black">AGREGAR AL CARRITO · {money(product.price)}</Text></Pressable>
+      <Pressable onPress={add} disabled={product.stock < 1} className={`rounded-2xl py-4 items-center ${product.stock < 1 ? "bg-zinc-800" : "bg-gold-400"}`}><Text className={`font-black ${product.stock < 1 ? "text-zinc-500" : "text-black"}`}>{product.stock < 1 ? "AGOTADO" : `AGREGAR AL CARRITO · ${money(product.price)}`}</Text></Pressable>
     </View>
   </View>;
 }
