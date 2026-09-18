@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
+import { authApi } from "../services/api";
 
 const AppContext = createContext(null);
 
@@ -6,6 +7,7 @@ export function AppProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [orders, setOrders] = useState([]);
 
   const addToCart = (product) => setCart((prev) => {
@@ -20,14 +22,35 @@ export function AppProvider({ children }) {
 
   const toggleFavorite = (id) => setFavorites((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
 
+  const login = async (credentials) => {
+    const data = await authApi.login(credentials);
+    setUser(data.user);
+    setToken(data.token);
+    return data.user;
+  };
+
+  const register = async (body) => {
+    const data = await authApi.register(body);
+    setUser(data.user);
+    setToken(data.token);
+    return data.user;
+  };
+
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    setOrders([]);
+  };
+
   const total = cart.reduce((sum, x) => sum + x.price * x.quantity, 0);
   const count = cart.reduce((sum, x) => sum + x.quantity, 0);
 
   const value = useMemo(() => ({
     cart, addToCart, removeFromCart, updateQuantity, clearCart,
     favorites, toggleFavorite,
-    user, setUser, orders, setOrders, total, count
-  }), [cart, favorites, user, orders, total, count]);
+    user, setUser, orders, setOrders, total, count,
+    token, login, register, logout
+  }), [cart, favorites, user, token, orders, total, count]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
