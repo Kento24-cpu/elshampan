@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { orderApi } from "../services/api";
 import { useApp } from "../context/AppContext";
+import { useTheme } from "../context/ThemeContext";
 
 const money = v => `C$ ${Number(v).toLocaleString("es-NI")}`;
 
@@ -9,6 +10,7 @@ export default function CheckoutScreen({ navigation }) {
   const { cart, total, clearCart, token } = useApp();
   const [form, setForm] = useState({ name: "", phone: "", address: "", notes: "" });
   const [loading, setLoading] = useState(false);
+  const { colors } = useTheme();
   const field = (key) => ({ value: form[key], onChangeText: v => setForm({ ...form, [key]: v }) });
 
   const submit = async () => {
@@ -39,16 +41,16 @@ export default function CheckoutScreen({ navigation }) {
     }
   };
 
-  return <ScrollView className="flex-1 bg-black px-5 pt-5" contentContainerStyle={{paddingBottom:50}}>
-    <Text className="text-2xl font-black text-white">Finalizar compra</Text>
-    <Text className="mb-7 mt-1 text-sm text-zinc-500">Entrega segura y sencilla.</Text>
+  return <ScrollView className="flex-1 bg-canvas px-5 pt-5" contentContainerStyle={{paddingBottom:50}}>
+    <Text className="text-2xl font-black text-content">Finalizar compra</Text>
+    <Text className="mb-7 mt-1 text-sm text-muted">Entrega segura y sencilla.</Text>
     {[
       ["Nombre completo","Ej. Juan Pérez","name"],
       ["Teléfono","Ej. 8888-8888","phone"],
       ["Dirección de entrega","Barrio, calle, referencias...","address"],
       ["Notas del pedido","Indicaciones adicionales (opcional)","notes"]
-    ].map(([label,placeholder,key])=><View key={key} className="mb-4"><Text className="mb-2 text-xs font-bold text-zinc-300">{label}</Text><TextInput {...field(key)} placeholder={placeholder} placeholderTextColor="#666" multiline={key==="address"||key==="notes"} className={`rounded-2xl border border-zinc-800 bg-[#111111] px-4 py-4 text-white ${key==="address"||key==="notes"?"min-h-24":""}`}/></View>)}
-    <View className="mt-2 rounded-2xl border border-gold-600/30 bg-[#18130a] p-5"><Text className="text-xs text-zinc-500">TOTAL A PAGAR</Text><Text className="mt-1 text-3xl font-black text-gold-300">{money(total)}</Text><Text className="mt-2 text-[10px] text-zinc-600">El servidor confirma stock y precio final al registrar el pedido.</Text></View>
-    <Pressable onPress={submit} disabled={loading} className={`mt-5 items-center rounded-2xl py-4 ${loading ? "bg-gold-400/60" : "bg-gold-400"}`}>{loading ? <ActivityIndicator color="#000" /> : <Text className="font-black text-black">CONFIRMAR PEDIDO</Text>}</Pressable>
+    ].map(([label,placeholder,key])=><View key={key} className="mb-4"><Text className="mb-2 text-xs font-bold text-content">{label}</Text><TextInput {...field(key)} placeholder={placeholder} placeholderTextColor={colors.placeholder} multiline={key==="address"||key==="notes"} className={`rounded-2xl border border-line bg-surface px-4 py-4 text-content ${key==="address"||key==="notes"?"min-h-24":""}`}/></View>)}
+    <View className="mt-2 rounded-2xl border border-gold-600/30 bg-tint p-5"><Text className="text-xs text-muted">TOTAL A PAGAR</Text><Text className="mt-1 text-3xl font-black text-accent">{money(total)}</Text><Text className="mt-2 text-[10px] text-subtle">El servidor confirma stock y precio final al registrar el pedido.</Text></View>
+    <Pressable onPress={submit} disabled={loading} className={`mt-5 items-center rounded-2xl py-4 ${loading ? "bg-gold-400/60" : "bg-accent-strong"}`}>{loading ? <ActivityIndicator color={colors.onAccent} /> : <Text className="font-black text-black">CONFIRMAR PEDIDO</Text>}</Pressable>
   </ScrollView>;
 }
