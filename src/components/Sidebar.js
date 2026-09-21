@@ -1,10 +1,11 @@
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useNavigationState } from "@react-navigation/native";
+import { useNavigationState } from "@react-navigation/native";
 import { useApp } from "../context/AppContext";
 import { THEME_OPTIONS, useTheme } from "../context/ThemeContext";
 import { SIDEBAR_WIDTH } from "../hooks/useResponsive";
+import { useSectionNavigation } from "../hooks/useSectionNavigation";
 
 const NAV_ITEMS = [
   { route: "Inicio", label: "Inicio", icon: "home" },
@@ -26,7 +27,7 @@ const selectActiveRoute = (state) => {
 };
 
 export default function Sidebar() {
-  const navigation = useNavigation();
+  const goTo = useSectionNavigation();
   const activeRoute = useNavigationState(selectActiveRoute);
   const { count, favorites, user, logout } = useApp();
   const { colors, preference, setPreference } = useTheme();
@@ -51,7 +52,7 @@ export default function Sidebar() {
             return (
               <Pressable
                 key={item.route}
-                onPress={() => navigation.navigate(item.route)}
+                onPress={() => goTo(item.route)}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
                 accessibilityState={{ selected: active }}
@@ -124,7 +125,7 @@ export default function Sidebar() {
             </View>
           ) : (
             <Pressable
-              onPress={() => navigation.navigate("Cuenta")}
+              onPress={() => goTo("Cuenta")}
               accessibilityRole="button"
               accessibilityLabel="Iniciar sesión"
               className="items-center rounded-xl bg-accent-strong py-3"
