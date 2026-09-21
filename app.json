@@ -3,8 +3,8 @@
     "name": "El Shampán",
     "slug": "el-shampan",
     "version": "2.0.0",
-    "orientation": "portrait",
-    "userInterfaceStyle": "dark",
+    "orientation": "default",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#090909"

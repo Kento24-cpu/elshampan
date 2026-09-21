@@ -18,19 +18,35 @@ const buildQuery = (params = {}) => {
     : `?${entries.map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join("&")}`;
 };
 
+const networkError = () => {
+  const error = new Error("No pudimos contactar el servidor.");
+  error.status = 0;
+  return error;
+};
+
 export async function apiFetch(path, options = {}) {
   const { token, ...rest } = options;
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    headers: {
-      ...(rest.body ? { "Content-Type": "application/json" } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(rest.headers || {})
-    }
-  });
+  let response;
 
-  const data = await response.json().catch(() => ({}));
+  // `fetch` rejects with an English driver message before any status exists, so
+  // it is translated here instead of leaking "Network request failed" to the UI.
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...rest,
+      headers: {
+        ...(rest.body ? { "Content-Type": "application/json" } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(rest.headers || {})
+      }
+    });
+  } catch {
+    throw networkError();
+  }
+
+  const data = response.status === 204
+    ? {}
+    : await response.json().catch(() => ({}));
 
   if (!response.ok) {
     const error = new Error(data.message || "Error del servidor");
@@ -44,6 +60,7 @@ export async function apiFetch(path, options = {}) {
 export const authApi = {
   login: (body) => apiFetch("/auth/login", { method: "POST", body: JSON.stringify(body) }),
   register: (body) => apiFetch("/auth/register", { method: "POST", body: JSON.stringify(body) }),
+  logout: (token) => apiFetch("/auth/logout", { method: "POST", token }),
   me: (token) => apiFetch("/auth/me", { token }),
   updateMe: (body, token) => apiFetch("/auth/me", { method: "PATCH", body: JSON.stringify(body), token })
 };
@@ -61,4 +78,19 @@ export const orderApi = {
   create: (body, token) => apiFetch("/orders", { method: "POST", body: JSON.stringify(body), token }),
   list: (token, params) => apiFetch(`/orders${buildQuery(params)}`, { token }),
   byId: (id, token) => apiFetch(`/orders/${id}`, { token })
+};
+
+// Never throws: the callers use it to tell "the API is down" apart from
+// "the API answered 503 because the database is down".
+export const healthApi = {
+  probe: async () => {
+    try {
+      const response = await fetch(`${API_URL}/health`);
+      const data = await response.json().catch(() => ({}));
+
+      return { reachable: true, dbUp: response.ok && data.db === "up" };
+    } catch {
+      return { reachable: false, dbUp: false };
+    }
+  }
 };
