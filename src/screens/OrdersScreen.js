@@ -4,15 +4,17 @@ import Header from "../components/Header";
 import { orderApi } from "../services/api";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
+import { useSectionNavigation } from "../hooks/useSectionNavigation";
 
 const money = v => `C$ ${Number(v).toLocaleString("es-NI")}`;
 const statusLabel = v => v ? v.charAt(0).toUpperCase() + v.slice(1) : v;
 
-export default function OrdersScreen({ navigation }) {
+export default function OrdersScreen() {
   const { token, orders, setOrders } = useApp();
   const [loading, setLoading] = useState(Boolean(token));
   const [error, setError] = useState(null);
   const { colors } = useTheme();
+  const goTo = useSectionNavigation();
 
   const load = useCallback(async () => {
     if (!token) {
@@ -37,7 +39,7 @@ export default function OrdersScreen({ navigation }) {
   }, [load]);
 
   if (!token) {
-    return <View className="flex-1 bg-canvas"><Header title="Mis pedidos" subtitle="Historial de compras"/><View className="flex-1 items-center justify-center px-8"><Text className="text-5xl">▱</Text><Text className="mt-4 text-xl font-black text-content">Inicia sesión para ver tus pedidos</Text><Text className="mt-2 text-center text-muted">Tu historial se guarda en tu cuenta de El Shampan.</Text><Pressable onPress={() => navigation.navigate("Cuenta")} className="mt-6 rounded-2xl bg-accent-strong px-8 py-4"><Text className="font-black text-black">IR A MI CUENTA</Text></Pressable></View></View>;
+    return <View className="flex-1 bg-canvas"><Header title="Mis pedidos" subtitle="Historial de compras"/><View className="flex-1 items-center justify-center px-8"><Text className="text-5xl">▱</Text><Text className="mt-4 text-xl font-black text-content">Inicia sesión para ver tus pedidos</Text><Text className="mt-2 text-center text-muted">Tu historial se guarda en tu cuenta de El Shampan.</Text><Pressable onPress={() => goTo("Cuenta")} className="mt-6 rounded-2xl bg-accent-strong px-8 py-4"><Text className="font-black text-black">IR A MI CUENTA</Text></Pressable></View></View>;
   }
 
   if (loading) {
