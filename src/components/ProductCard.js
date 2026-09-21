@@ -2,15 +2,21 @@ import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
-
-const money = (v) => `C$ ${Number(v).toLocaleString("es-NI")}`;
+import { useToast } from "../context/ToastContext";
+import { money } from "../utils/format";
 
 // `width` comes from the grid so the row never stretches; without it the card
 // falls back to the two column layout.
 export default function ProductCard({ product, onPress, horizontal = false, width }) {
   const { addToCart, favorites, toggleFavorite } = useApp();
   const { colors } = useTheme();
+  const { show } = useToast();
   const favorite = favorites.includes(product.id);
+
+  const add = () => {
+    addToCart(product);
+    show(`${product.name} agregado al carrito`);
+  };
 
   const sizing = width ? "" : horizontal ? "w-64 mr-4" : "w-[48%]";
 
@@ -37,7 +43,7 @@ export default function ProductCard({ product, onPress, horizontal = false, widt
             <Text className="text-base font-black text-content">{money(product.price)}</Text>
             {product.oldPrice && <Text className="text-[10px] text-subtle line-through">{money(product.oldPrice)}</Text>}
           </View>
-          <Pressable onPress={() => addToCart(product)} className="h-10 w-10 items-center justify-center rounded-full bg-accent-strong">
+          <Pressable onPress={add} className="h-10 w-10 items-center justify-center rounded-full bg-accent-strong">
             <Text className="text-xl font-black text-black">+</Text>
           </Pressable>
         </View>
