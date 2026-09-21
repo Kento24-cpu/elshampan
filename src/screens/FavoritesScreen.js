@@ -5,12 +5,14 @@ import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import { productApi } from "../services/api";
 import { useApp } from "../context/AppContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function FavoritesScreen({ navigation }) {
   const { favorites } = useApp();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { colors } = useTheme();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -33,10 +35,10 @@ export default function FavoritesScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View className="flex-1 bg-black">
+      <View className="flex-1 bg-canvas">
         <Header title="Favoritos" subtitle="Cargando..." />
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color="#E9B949" />
+          <ActivityIndicator size="large" color={colors.accent} />
         </View>
       </View>
     );
@@ -44,15 +46,15 @@ export default function FavoritesScreen({ navigation }) {
 
   if (error) {
     return (
-      <View className="flex-1 bg-black">
+      <View className="flex-1 bg-canvas">
         <Header title="Favoritos" subtitle="Sin conexión" />
         <View className="flex-1 items-center justify-center px-8">
           <Text className="text-5xl">⚠</Text>
-          <Text className="mt-4 text-center text-xl font-black text-white">
+          <Text className="mt-4 text-center text-xl font-black text-content">
             No pudimos cargar tus favoritos
           </Text>
-          <Text className="mt-2 text-center text-zinc-500">{error}</Text>
-          <Pressable onPress={load} className="mt-6 rounded-2xl bg-gold-400 px-8 py-4">
+          <Text className="mt-2 text-center text-muted">{error}</Text>
+          <Pressable onPress={load} className="mt-6 rounded-2xl bg-accent-strong px-8 py-4">
             <Text className="font-black text-black">REINTENTAR</Text>
           </Pressable>
         </View>
@@ -61,7 +63,7 @@ export default function FavoritesScreen({ navigation }) {
   }
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-canvas">
       <Header
         title="Favoritos"
         subtitle={`${data.length} guardados`}
@@ -95,11 +97,11 @@ export default function FavoritesScreen({ navigation }) {
         <View className="flex-1 items-center justify-center px-8">
           <Text className="text-5xl">♡</Text>
 
-          <Text className="mt-4 text-xl font-black text-white">
+          <Text className="mt-4 text-xl font-black text-content">
             Aún no tienes favoritos
           </Text>
 
-          <Text className="mt-2 text-center text-zinc-500">
+          <Text className="mt-2 text-center text-muted">
             Toca el corazón de cualquier producto para guardarlo.
           </Text>
         </View>

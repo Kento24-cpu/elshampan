@@ -1,0 +1,42 @@
+{
+  "gold": {
+    "300": "#F6D77A",
+    "400": "#E9B949",
+    "500": "#C99222",
+    "600": "#9E6D12"
+  },
+  "dark": {
+    "canvas": "#000000",
+    "surface": "#111111",
+    "elevated": "#171717",
+    "line": "#242424",
+    "content": "#FFFFFF",
+    "muted": "#A1A1AA",
+    "subtle": "#8B8B93",
+    "placeholder": "#8B8B93",
+    "tint": "#18130A",
+    "accent": "#E9B949",
+    "accent-strong": "#E9B949",
+    "danger": "#F87171",
+    "onAccent": "#000000"
+  },
+  "light": {
+    "canvas": "#FAFAFA",
+    "surface": "#FFFFFF",
+    "elevated": "#F4F4F5",
+    "line": "#E4E4E7",
+    "content": "#18181B",
+    "muted": "#52525B",
+    "subtle": "#52525B",
+    "placeholder": "#71717A",
+    "tint": "#FDF7E6",
+    "accent": "#9E6D12",
+    "accent-strong": "#E9B949",
+    "danger": "#B91C1C",
+    "onAccent": "#000000"
+  },
+  "gradient": {
+    "dark": ["#3A2A0B", "#17130B", "#0D0D0D"],
+    "light": ["#FDF7E6", "#F6F0E1", "#FFFFFF"]
+  }
+}

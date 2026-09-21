@@ -1,3 +1,9 @@
+// Every colour lives in ./src/theme/palette.json so that this config and
+// src/theme/index.js cannot drift apart. Nothing outside those two files should
+// contain a hex literal.
+
+const palette = require("./src/theme/palette.json");
+
 module.exports = {
   content: [
     "./App.js",
@@ -6,15 +12,27 @@ module.exports = {
   presets: [
     require("nativewind/preset")
   ],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        gold: {
-          300: "#F6D77A",
-          400: "#E9B949",
-          500: "#C99222",
-          600: "#9E6D12"
-        }
+        gold: palette.gold,
+
+        // Semantic tokens resolved from the CSS variables that ThemeProvider
+        // installs with NativeWind's `vars()`. Never add an opacity modifier
+        // (`bg-surface/50`) to these: Tailwind cannot apply alpha to a var().
+        canvas: "var(--color-canvas)",
+        surface: "var(--color-surface)",
+        elevated: "var(--color-elevated)",
+        line: "var(--color-line)",
+        content: "var(--color-content)",
+        muted: "var(--color-muted)",
+        subtle: "var(--color-subtle)",
+        placeholder: "var(--color-placeholder)",
+        tint: "var(--color-tint)",
+        accent: "var(--color-accent)",
+        "accent-strong": "var(--color-accent-strong)",
+        danger: "var(--color-danger)"
       }
     }
   },
