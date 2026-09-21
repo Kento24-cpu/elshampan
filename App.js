@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppProvider } from "./src/context/AppContext";
 import { ThemeProvider, useTheme } from "./src/context/ThemeContext";
+import { ToastProvider } from "./src/context/ToastContext";
 import ResponsiveShell from "./src/navigation/ResponsiveShell";
 import ProductScreen from "./src/screens/ProductScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
@@ -63,9 +64,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <AppProvider>
-          <AppNavigator />
-        </AppProvider>
+        <ToastProvider>
+          <AppProvider>
+            <AppNavigator />
+          </AppProvider>
+        </ToastProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

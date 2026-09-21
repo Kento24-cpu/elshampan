@@ -1,21 +1,38 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { orderApi } from "../services/api";
+import { describeError } from "../services/errors";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
+import { useToast } from "../context/ToastContext";
+import { useSectionNavigation } from "../hooks/useSectionNavigation";
+import { money } from "../utils/format";
 
-const money = v => `C$ ${Number(v).toLocaleString("es-NI")}`;
-
-export default function CheckoutScreen({ navigation }) {
+export default function CheckoutScreen() {
   const { cart, total, clearCart, token } = useApp();
   const [form, setForm] = useState({ name: "", phone: "", address: "", notes: "" });
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
+  const { show } = useToast();
+  const goTo = useSectionNavigation();
   const field = (key) => ({ value: form[key], onChangeText: v => setForm({ ...form, [key]: v }) });
 
   const submit = async () => {
-    if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) return Alert.alert("Completa tus datos", "Nombre, teléfono y dirección son obligatorios.");
-    if (cart.length === 0) return Alert.alert("Carrito vacío", "Agrega productos antes de confirmar tu pedido.");
+    const missing = [
+      !form.name.trim() && "el nombre",
+      !form.phone.trim() && "el teléfono",
+      !form.address.trim() && "la dirección"
+    ].filter(Boolean);
+
+    if (missing.length > 0) {
+      show(`Falta ${missing.join(", ")}`, "error");
+      return;
+    }
+
+    if (cart.length === 0) {
+      show("Tu carrito está vacío", "error");
+      return;
+    }
 
     setLoading(true);
 
@@ -29,13 +46,12 @@ export default function CheckoutScreen({ navigation }) {
       }, token);
 
       clearCart();
+      show(`Pedido ${order.code} confirmado por ${money(order.total)}`);
 
-      const buttons = token ? [{ text: "Ver mis pedidos", onPress: () => navigation.navigate("Pedidos") }] : [{ text: "Entendido" }];
-      const hint = token ? "" : "\n\nInicia sesión en tu cuenta para guardar el historial de pedidos.";
-
-      Alert.alert("¡Pedido confirmado!", `Tu pedido ${order.code} fue registrado por ${money(order.total)}.${hint}`, buttons);
+      if (token) goTo("Pedidos");
     } catch (error) {
-      Alert.alert("No pudimos confirmar tu pedido", error.message);
+      const { title, message } = describeError(error, "No pudimos confirmar tu pedido");
+      show(`${title}: ${message}`, "error");
     } finally {
       setLoading(false);
     }
