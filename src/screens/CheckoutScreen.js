@@ -66,7 +66,7 @@ export default function CheckoutScreen() {
       ["Dirección de entrega","Barrio, calle, referencias...","address"],
       ["Notas del pedido","Indicaciones adicionales (opcional)","notes"]
     ].map(([label,placeholder,key])=><View key={key} className="mb-4"><Text className="mb-2 text-xs font-bold text-content">{label}</Text><TextInput {...field(key)} placeholder={placeholder} placeholderTextColor={colors.placeholder} multiline={key==="address"||key==="notes"} className={`rounded-2xl border border-line bg-surface px-4 py-4 text-content ${key==="address"||key==="notes"?"min-h-24":""}`}/></View>)}
-    <View className="mt-2 rounded-2xl border border-gold-600/30 bg-tint p-5"><Text className="text-xs text-muted">TOTAL A PAGAR</Text><Text className="mt-1 text-3xl font-black text-accent">{money(total)}</Text><Text className="mt-2 text-[10px] text-subtle">El servidor confirma stock y precio final al registrar el pedido.</Text></View>
+    <View className="mt-2 rounded-2xl border border-gold-600/30 bg-tint p-5"><Text className="text-xs text-muted">TOTAL A PAGAR</Text><Text className="mt-1 text-3xl font-black text-accent">{money(total)}</Text><Text className="mt-2 text-xs text-subtle">El servidor confirma stock y precio final al registrar el pedido.</Text></View>
     <Pressable onPress={submit} disabled={loading} className={`mt-5 items-center rounded-2xl py-4 ${loading ? "bg-gold-400/60" : "bg-accent-strong"}`}>{loading ? <ActivityIndicator color={colors.onAccent} /> : <Text className="font-black text-black">CONFIRMAR PEDIDO</Text>}</Pressable>
   </ScrollView>;
 }

@@ -67,7 +67,7 @@ export default function ProfileScreen({ navigation }) {
     }
   };
 
-  const item = (label, value, action) => <Pressable onPress={action} className="flex-row items-center justify-between border-b border-line px-5 py-5"><View><Text className="font-bold text-content">{label}</Text>{value && <Text className="mt-1 text-[10px] text-subtle">{value}</Text>}</View><Text className="text-xl text-subtle">›</Text></Pressable>;
+  const item = (label, value, action) => <Pressable onPress={action} className="flex-row items-center justify-between border-b border-line px-5 py-5"><View><Text className="font-bold text-content">{label}</Text>{value && <Text className="mt-1 text-xs text-subtle">{value}</Text>}</View><Text className="text-xl text-subtle">›</Text></Pressable>;
 
   if (!user) {
     return <ScrollView className="flex-1 bg-canvas px-5 pt-6" contentContainerStyle={{ paddingBottom: 40 }}>
@@ -80,7 +80,7 @@ export default function ProfileScreen({ navigation }) {
         {mode === "register" && <View className="mt-4"><Text className="mb-2 text-xs font-bold text-content">Teléfono (opcional)</Text><TextInput {...field("phone")} keyboardType="phone-pad" placeholder="8888-8888" placeholderTextColor={colors.placeholder} className="rounded-2xl border border-line bg-elevated px-4 py-4 text-content" /></View>}
         <Pressable onPress={submitSession} disabled={loading} className="mt-5 items-center rounded-2xl bg-accent-strong py-4">{loading ? <ActivityIndicator color={colors.onAccent} /> : <Text className="font-black text-black">{mode === "login" ? "ENTRAR" : "CREAR CUENTA"}</Text>}</Pressable>
         <Pressable onPress={() => setMode(mode === "login" ? "register" : "login")} className="mt-4 items-center"><Text className="text-xs font-bold text-accent">{mode === "login" ? "¿No tienes cuenta? Regístrate" : "Ya tengo cuenta, iniciar sesión"}</Text></Pressable>
-        <Text className="mt-4 text-center text-[10px] text-subtle">Cuenta demo: demo@elshampan.com / Demo1234</Text>
+        <Text className="mt-4 text-center text-xs text-subtle">Cuenta demo: demo@elshampan.com / Demo1234</Text>
       </View>
       <View className="mt-5 rounded-2xl border border-gold-600/20 bg-tint p-5"><Text className="font-black text-accent">EL SHAMPÁN</Text><Text className="mt-2 text-xs leading-5 text-muted">Una experiencia premium para encontrar tus licores sellados favoritos.</Text></View>
     </ScrollView>;
