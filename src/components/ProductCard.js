@@ -5,13 +5,21 @@ import { useTheme } from "../context/ThemeContext";
 
 const money = (v) => `C$ ${Number(v).toLocaleString("es-NI")}`;
 
-export default function ProductCard({ product, onPress, horizontal = false }) {
+// `width` comes from the grid so the row never stretches; without it the card
+// falls back to the two column layout.
+export default function ProductCard({ product, onPress, horizontal = false, width }) {
   const { addToCart, favorites, toggleFavorite } = useApp();
   const { colors } = useTheme();
   const favorite = favorites.includes(product.id);
 
+  const sizing = width ? "" : horizontal ? "w-64 mr-4" : "w-[48%]";
+
   return (
-    <Pressable onPress={onPress} className={`${horizontal ? "w-64 mr-4" : "w-[48%]"} mb-4 overflow-hidden rounded-[22px] border border-line bg-surface`}>
+    <Pressable
+      onPress={onPress}
+      style={width ? { width } : undefined}
+      className={`${sizing} mb-4 overflow-hidden rounded-[22px] border border-line bg-surface`}
+    >
       <View className="h-44 items-center justify-center bg-elevated">
         <Image source={{ uri: product.image }} resizeMode="contain" className="h-full w-full" />
         {product.badge && <View className="absolute left-3 top-3 rounded-full bg-accent-strong px-2.5 py-1"><Text className="text-[9px] font-black text-black">{product.badge}</Text></View>}

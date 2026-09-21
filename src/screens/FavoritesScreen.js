@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 
 import Header from "../components/Header";
-import ProductCard from "../components/ProductCard";
+import ProductGrid from "../components/ProductGrid";
 import { productApi } from "../services/api";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
@@ -64,34 +64,14 @@ export default function FavoritesScreen({ navigation }) {
 
   return (
     <View className="flex-1 bg-canvas">
-      <Header
-        title="Favoritos"
-        subtitle={`${data.length} guardados`}
-      />
+      <Header title="Favoritos" subtitle={`${data.length} guardados`} />
 
       {data.length > 0 ? (
-        <FlatList
+        <ProductGrid
           data={data}
-          numColumns={2}
-          keyExtractor={(item) => String(item.id)}
-          columnWrapperStyle={{
-            justifyContent: "space-between",
-          }}
-          contentContainerStyle={{
-            paddingHorizontal: 18,
-            paddingBottom: 100,
-          }}
-          renderItem={({ item }) => (
-            <ProductCard
-              product={item}
-              onPress={() =>
-                navigation.navigate("Producto", {
-                  product: item,
-                  productId: item.id,
-                })
-              }
-            />
-          )}
+          onPressProduct={(product) =>
+            navigation.navigate("Producto", { product, productId: product.id })
+          }
         />
       ) : (
         <View className="flex-1 items-center justify-center px-8">

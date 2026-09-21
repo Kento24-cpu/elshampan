@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import ProductCard from "../components/ProductCard";
+import ProductGrid from "../components/ProductGrid";
 import { categoryApi, productApi } from "../services/api";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
@@ -53,12 +53,9 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View className="flex-1 bg-canvas">
-      <FlatList
+      <ProductGrid
         data={results}
-        numColumns={2}
-        keyExtractor={x => x.id}
-        columnWrapperStyle={{ justifyContent: "space-between" }}
-        contentContainerStyle={{ paddingHorizontal: 18, paddingBottom: 100 }}
+        onPressProduct={(product) => navigation.navigate("Producto", { product, productId: product.id })}
         ListEmptyComponent={<View className="items-center px-8 py-16"><Text className="text-5xl">⌕</Text><Text className="mt-4 text-xl font-black text-content">Sin resultados</Text><Text className="mt-2 text-center text-muted">No encontramos productos para “{query}”.</Text></View>}
         ListHeaderComponent={
           <View>
@@ -97,7 +94,6 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
         }
-        renderItem={({ item }) => <ProductCard product={item} onPress={() => navigation.navigate("Producto", { product: item, productId: item.id })} />}
       />
     </View>
   );
