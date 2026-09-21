@@ -1,17 +1,64 @@
-import React from "react";
-import { FlatList, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Pressable, Text, View } from "react-native";
 
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { productApi } from "../services/api";
 import { useApp } from "../context/AppContext";
 
 export default function FavoritesScreen({ navigation }) {
   const { favorites } = useApp();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const data = products.filter((product) =>
-    favorites.includes(product.id)
-  );
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      setProducts(await productApi.list());
+    } catch (loadError) {
+      setError(loadError.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const data = products.filter((product) => favorites.includes(product.id));
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-black">
+        <Header title="Favoritos" subtitle="Cargando..." />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#E9B949" />
+        </View>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View className="flex-1 bg-black">
+        <Header title="Favoritos" subtitle="Sin conexión" />
+        <View className="flex-1 items-center justify-center px-8">
+          <Text className="text-5xl">⚠</Text>
+          <Text className="mt-4 text-center text-xl font-black text-white">
+            No pudimos cargar tus favoritos
+          </Text>
+          <Text className="mt-2 text-center text-zinc-500">{error}</Text>
+          <Pressable onPress={load} className="mt-6 rounded-2xl bg-gold-400 px-8 py-4">
+            <Text className="font-black text-black">REINTENTAR</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-black">
@@ -38,6 +85,7 @@ export default function FavoritesScreen({ navigation }) {
               onPress={() =>
                 navigation.navigate("Producto", {
                   product: item,
+                  productId: item.id,
                 })
               }
             />
