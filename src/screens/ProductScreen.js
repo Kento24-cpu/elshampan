@@ -1,17 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { productApi } from "../services/api";
+import { describeError } from "../services/errors";
 import { useApp } from "../context/AppContext";
 import { useTheme } from "../context/ThemeContext";
+import { useToast } from "../context/ToastContext";
+import { money } from "../utils/format";
 
-const money = v => `C$ ${Number(v).toLocaleString("es-NI")}`;
-
-export default function ProductScreen({ route, navigation }) {
+export default function ProductScreen({ route }) {
   const { product: initialProduct, productId } = route.params;
   const [product, setProduct] = useState(initialProduct ?? null);
   const [error, setError] = useState(null);
   const { addToCart, favorites, toggleFavorite } = useApp();
   const { colors } = useTheme();
+  const { show } = useToast();
 
   const id = productId ?? initialProduct?.id;
 
@@ -23,7 +25,7 @@ export default function ProductScreen({ route, navigation }) {
     try {
       setProduct(await productApi.byId(id));
     } catch (loadError) {
-      setError(loadError.message);
+      setError(describeError(loadError, "No pudimos cargar el producto").message);
     }
   }, [id]);
 
@@ -52,7 +54,7 @@ export default function ProductScreen({ route, navigation }) {
 
   const add = () => {
     addToCart(product);
-    Alert.alert("Producto agregado", "Se agregó correctamente a tu carrito.");
+    show(`${product.name} agregado al carrito`);
   };
 
   return <View className="flex-1 bg-canvas">
@@ -60,10 +62,10 @@ export default function ProductScreen({ route, navigation }) {
       <View className="h-80 items-center justify-center bg-elevated">
         <Image source={{ uri: product.image }} resizeMode="contain" className="h-full w-full" />
         <Pressable onPress={()=>toggleFavorite(product.id)} className="absolute right-5 top-5 h-12 w-12 items-center justify-center rounded-full bg-black/70"><Text className="text-2xl text-accent">{favorite?"♥":"♡"}</Text></Pressable>
-        {product.badge && <View className="absolute left-5 top-5 rounded-full bg-accent-strong px-3 py-2"><Text className="text-[10px] font-black text-black">{product.badge}</Text></View>}
+        {product.badge && <View className="absolute left-5 top-5 rounded-full bg-accent-strong px-3 py-2"><Text className="text-xs font-black text-black">{product.badge}</Text></View>}
       </View>
       <View className="px-5 pt-6">
-        <Text className="text-[10px] font-black uppercase tracking-[3px] text-accent">{product.category} · {product.volume}</Text>
+        <Text className="text-xs font-black uppercase tracking-[3px] text-accent">{product.category} · {product.volume}</Text>
         <Text className="mt-2 text-3xl font-black leading-9 text-content">{product.name}</Text>
         <View className="mt-3 flex-row items-center"><Text className="font-bold text-accent">★ {product.rating}</Text><Text className="ml-2 text-xs text-subtle">{product.reviews} reseñas</Text></View>
         <View className="mt-4 flex-row items-end"><Text className="text-3xl font-black text-content">{money(product.price)}</Text>{product.oldPrice&&<Text className="mb-1 ml-3 text-sm text-subtle line-through">{money(product.oldPrice)}</Text>}</View>

@@ -52,8 +52,8 @@ function AppNavigator() {
           <Stack.Screen name="Principal" component={ResponsiveShell} options={{ headerShown: false }} />
           <Stack.Screen name="Producto" component={ProductScreen} options={{ title: "Detalle" }} />
           <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: "Finalizar compra" }} />
-          <Stack.Screen name="Favoritos" component={FavoritesScreen} options={{ title: "Favoritos" }} />
-          <Stack.Screen name="Pedidos" component={OrdersScreen} options={{ title: "Mis pedidos" }} />
+          <Stack.Screen name="Favoritos" component={FavoritesScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="Pedidos" component={OrdersScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

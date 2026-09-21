@@ -65,13 +65,13 @@ export default function HomeScreen({ navigation }) {
                 <Text className="mt-1 text-xs font-medium text-muted">Selección premium · Licores sellados</Text>
               </View>
               <View className="flex-row">
-                <Pressable onPress={() => navigation.navigate("Favoritos")} className="mr-2 h-11 w-11 items-center justify-center rounded-full border border-line bg-surface"><Text className="text-lg text-accent">♡</Text>{favorites.length > 0 && <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-accent-strong px-1"><Text className="text-[9px] font-black text-black">{favorites.length}</Text></View>}</Pressable>
-                <Pressable onPress={() => navigation.navigate("Carrito")} className="h-11 w-11 items-center justify-center rounded-full border border-line bg-surface"><Text className="text-base font-black text-accent">C</Text>{count > 0 && <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-accent-strong px-1"><Text className="text-[9px] font-black text-black">{count}</Text></View>}</Pressable>
+                <Pressable onPress={() => navigation.navigate("Favoritos")} className="mr-2 h-11 w-11 items-center justify-center rounded-full border border-line bg-surface"><Text className="text-lg text-accent">♡</Text>{favorites.length > 0 && <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-accent-strong px-1"><Text className="text-[11px] font-black text-black">{favorites.length}</Text></View>}</Pressable>
+                <Pressable onPress={() => navigation.navigate("Carrito")} className="h-11 w-11 items-center justify-center rounded-full border border-line bg-surface"><Text className="text-base font-black text-accent">C</Text>{count > 0 && <View className="absolute -right-1 -top-1 h-5 min-w-5 items-center justify-center rounded-full bg-accent-strong px-1"><Text className="text-[11px] font-black text-black">{count}</Text></View>}</Pressable>
               </View>
             </View>
 
             <LinearGradient colors={gradient} className="mb-5 overflow-hidden rounded-[28px] border border-gold-600/30 p-6">
-              <Text className="text-[10px] font-black uppercase tracking-[3px] text-accent">Selección de la semana</Text>
+              <Text className="text-xs font-black uppercase tracking-[3px] text-accent">Selección de la semana</Text>
               <Text className="mt-3 text-3xl font-black leading-9 text-content">El buen gusto</Text>
               <Text className="text-3xl font-black leading-9 text-accent">empieza aquí.</Text>
               <Text className="mt-3 max-w-[270px] text-sm leading-5 text-muted">Productos sellados y seleccionados para momentos especiales.</Text>

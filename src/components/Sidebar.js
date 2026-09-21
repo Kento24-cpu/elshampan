@@ -69,7 +69,7 @@ export default function Sidebar() {
                 </Text>
                 {badge > 0 && (
                   <View className="min-w-6 items-center rounded-full bg-accent-strong px-2 py-0.5">
-                    <Text className="text-[10px] font-black text-black">{badge}</Text>
+                    <Text className="text-xs font-black text-black">{badge}</Text>
                   </View>
                 )}
               </Pressable>
@@ -78,7 +78,7 @@ export default function Sidebar() {
         </View>
 
         <View className="mt-8 mb-3 border-t border-line pt-6">
-          <Text className="mb-3 px-2 text-[10px] font-black uppercase tracking-widest text-subtle">Tema</Text>
+          <Text className="mb-3 px-2 text-xs font-black uppercase tracking-widest text-subtle">Tema</Text>
           <View className="flex-row gap-1">
             {THEME_OPTIONS.map((option) => {
               const active = preference === option.value;
@@ -97,7 +97,7 @@ export default function Sidebar() {
                     size={16}
                     color={active ? colors.accent : colors.muted}
                   />
-                  <Text className={`mt-1 text-[10px] font-bold ${active ? "text-accent" : "text-muted"}`}>
+                  <Text className={`mt-1 text-xs font-bold ${active ? "text-accent" : "text-muted"}`}>
                     {option.label}
                   </Text>
                 </Pressable>
